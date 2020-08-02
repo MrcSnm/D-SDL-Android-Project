@@ -1,0 +1,6 @@
+[submodule "bindbc-loader"]
+	path = bindbc-loader
+	url = https://github.com/BindBC/bindbc-loader.git
+[submodule "bindbc-sdl"]
+	path = bindbc-sdl
+	url = https://github.com/BindBC/bindbc-sdl.git

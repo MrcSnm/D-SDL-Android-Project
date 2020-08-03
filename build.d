@@ -5,6 +5,10 @@ import std;
 **/
 string compiler = "ldc2";
 /**
+*	Where the object(*.o) will be output
+*/
+string objectDir = "obj";
+/**
 *	If you need to add a new architecture to output
 **/
 string[] archs = 
@@ -14,11 +18,16 @@ string[] archs =
 	"x86_64",
 	"i686"
 ];
-string[string] archFolders;
-archFolders["aarch64"] = "arm64-v8a";
-archFolders["armv7a"] = "armeabi-v7a";
-archFolders["x86_64"] = "x86_64";
-archFolders["i686"] = "x86";
+static enum string[string] archFolders =
+{
+	string[string] _;
+	_["aarch64"] = "arm64-v8a";
+	_["armv7a"]  = "armeabi-v7a";
+	_["x86_64"]  = "x86_64";
+	_["i686"]    = "x86";
+	return _;
+}();
+
 /**
 *	If you need to add a new source
 **/
@@ -60,6 +69,7 @@ string[] libraries =
 	"log"
 ];
 
+
 /**
 *	NDK Api Level, the first number(major) on the Android/Sdk/ndk/(major.minor)
 **/
@@ -90,8 +100,15 @@ void buildProgram(string arch, string[] sources) {
 	foreach (library; libraries)
 		command ~= format!"-L=-l%s"(library); //-L= for using GNU Linker(ld)
 
+	//Select architecture
 	command ~= format!"-mtriple=%s-%s"(arch, tripleSystem);
+
+	//Built as shared library
 	command ~= "--shared";
+	
+	//Output object
+	command~= format!"--od=%s/%s"(objectDir, archFolders[arch]);
+	//Output file
 	command ~= format!"--of=%s/libmain.so"(archFolders[arch]);
 
 	string androidLibs = format!"%s/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/%s%s/%s/"(environment["ANDROID_NDK_HOME"], arch, tripleSystem, ndkApiLevel);
@@ -102,14 +119,17 @@ void buildProgram(string arch, string[] sources) {
 		command~= source;
 	}
 
-	// Pid pid = spawnProcess("/bin/echo" ~ command);
-	Pid pid = spawnProcess(command);
+	
+
+	Pid pid = spawnProcess("/bin/echo" ~ command);
+	// Pid pid = spawnProcess(command);
 	pid.wait;
 }
 
-void main(string[] args) 
+void main() 
 {
 	// For debuging
+	
 	try
 	{
 		environment["ANDROID_NDK_HOME"];

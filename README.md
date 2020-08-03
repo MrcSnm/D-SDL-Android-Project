@@ -39,7 +39,12 @@ There are arrays definitions for each thing:
 	"bindbc-sdl/source"
 ];
 ```
-- Arch Folders
+- Arch Folders:
+Those are the output folders for each build, default is:
+```
+
+```
+
 - Dependencies, default is:
 ```
 [

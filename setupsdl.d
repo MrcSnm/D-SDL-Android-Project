@@ -2,40 +2,41 @@
 import std;
 
 string SDL_zip = "SDL_deps.zip";
-string project_dir = 
-string[] toGenerateLinks = 
-[
-    "SDL2",
-    "SDL2_image-2.0.5",
-    "SDL2_mixer-2.0.4",
-    "SDL2_net-2.0.1",
-    "SDL2_ttf-2.0.15"
-];
-
-char[] stringz(string str)
+string project_dir = "./SDL2/android-project/app/jni/";
+static enum string[string] targetLinks = 
 {
-    char[] ret = new char[str.length+1];
-    for(ulong i = 0, len = str.length; i < len;i++)
-        ret[i]=str[i];
-    ret[str.length] = 0;
-    return ret;
-}
+    string[string] _;
+    _["SDL2"] = "SDL2",
+    _["SDL2_image"] = "SDL2_image-2.0.5";
+    _["SDL2_mixer"] = "SDL2_mixer-2.0.4";
+    _["SDL2_net"] = "SDL2_net-2.0.1";
+    _["SDL2_ttf"] = "SDL2_ttf-2.0.15";
+    return _;
+}();
+// char[] stringz(string str)
+// {
+//     char[] ret = new char[str.length+1];
+//     for(ulong i = 0, len = str.length; i < len;i++)
+//         ret[i]=str[i];
+//     ret[str.length] = 0;
+//     return ret;
+// }
 
 void portablesymlink(string original, string target)
 {
-    char[][] cmd;
+    const(char[])[] cmd;
     version(Windows)
     {
-        cmd = [stringz("mklink"), stringz("/D"), stringz(target), stringz(original)];
+        cmd = ["mklink", "/D", getcwd()~"/"~target, original];
     }
     else
     {
-        cmd = [stringz("ln"), stringz("-s"), stringz(original), stringz(target)];
+        cmd = ["ln", "-s", getcwd()~"/"~original, target];
     }
     const auto ret = execute(cmd);
-    if(ret.status != 0)
     {
-        throw new Error("Could not create a symbolic link from " ~ original ~ " to "~target);
+        if(ret.status != 0)
+            throw new Error("Could not create a symbolic link from " ~ original ~ " to "~target);
     }
 }
 
@@ -67,9 +68,18 @@ Finished extracting zip, writing symbolic links
 -------------------------------------------------");
 
 
-foreach(link; toGenerateLinks)
+foreach(linkName, directoryName; targetLinks)
 {
-
+    string target = project_dir~linkName;
+    if(!exists(target))
+    {
+        portablesymlink(directoryName, target);
+        writeln("Generating Symlink from '"~directoryName~"' to "~target);
+    }
+    else
+    {
+        writeln("Symlink '"~linkName~"' already exists");
+    }
 }
 
 writeln(r"

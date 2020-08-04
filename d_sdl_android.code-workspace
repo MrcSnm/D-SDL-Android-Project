@@ -10,10 +10,11 @@
 		{
 			".gitmodules":true,
 			"obj":true,
-			"SDL2_image-2.0.5/" : true,
-			"SDL2_mixer-2.0.4/" : true,
-			"SDL2_net-2.0.1/" : true,
-			"SDL2_ttf-2.0.15/" : true,
+			"**/SDL2/**":true,
+			"**/SDL2_image-2.0.5/**" : true,
+			"**/SDL2_mixer-2.0.4/**" : true,
+			"**/SDL2_net-2.0.1/**" : true,
+			"**/SDL2_ttf-2.0.15/**" : true,
 			"SDL_deps.zip":true,
 			"**/.git": true,
 			"**/.svn": true,
@@ -23,17 +24,24 @@
 		},
 		"files.watcherExclude": 
 		{
-			"SDL2_image-2.0.5/**/*" : true,
-			"SDL2_mixer-2.0.4/**/*" : true,
-			"SDL2_net-2.0.1/**/*" : true,
-			"SDL2_ttf-2.0.15/**/*" : true,
+			"**/SDL2/**":true,
+			"**/SDL2_image-2.0.5/**" : true,
+			"**/SDL2_mixer-2.0.4/**" : true,
+			"**/SDL2_net-2.0.1/**" : true,
+			"**/SDL2_ttf-2.0.15/**" : true,
 			".gitmodules":true,
 			"**/.git/objects/**": true,
 			"**/.git/subtree-cache/**": true,
 			"**/node_modules/**": true,
 			"**/.hg/store/**": true
 		},
-		"search.exclude": {
+		"search.exclude": 
+		{
+			"**/SDL2/**":true,
+			"**/SDL2_image-2.0.5/**" : true,
+			"**/SDL2_mixer-2.0.4/**" : true,
+			"**/SDL2_net-2.0.1/**" : true,
+			"**/SDL2_ttf-2.0.15/**" : true,
 			".gitmodules" : true,
 			"**/node_modules": true,
 			"**/bower_components": true,

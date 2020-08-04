@@ -25,7 +25,7 @@ extern(C) int SDL_main()
   rt_init();
   loadSDLLibs();
   const int winPos = SDL_WINDOWPOS_UNDEFINED;
-  SDL_Rect gScreenRect = {0,0,320,240};
+  SDL_Rect gScreenRect = {0,0,680,480};
   SDL_DisplayMode displayMode;
   if( SDL_GetCurrentDisplayMode( 0, &displayMode ) == 0 )
   {

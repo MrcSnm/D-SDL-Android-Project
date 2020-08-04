@@ -8,6 +8,8 @@ string compiler = "ldc2";
 *	Where the object(*.o) will be output
 */
 string objectDir = "obj";
+
+string outputPath = "./SDL2/android-project/app/main/jniLibs/";
 /**
 *	If you need to add a new architecture to output
 **/
@@ -109,7 +111,7 @@ void buildProgram(string arch, string[] sources) {
 	//Output object
 	command~= format!"--od=%s/%s"(objectDir, archFolders[arch]);
 	//Output file
-	command ~= format!"--of=%s/libmain.so"(archFolders[arch]);
+	command ~= format!"--of=%s/%s/libmain.so"(outputPath, archFolders[arch]);
 
 	string androidLibs = format!"%s/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/%s%s/%s/"(environment["ANDROID_NDK_HOME"], arch, tripleSystem, ndkApiLevel);
 	command ~= format!"-L=-L%s"(androidLibs)~" ";
@@ -121,8 +123,8 @@ void buildProgram(string arch, string[] sources) {
 
 	
 
-	Pid pid = spawnProcess("/bin/echo" ~ command);
-	// Pid pid = spawnProcess(command);
+	// Pid pid = spawnProcess("/bin/echo" ~ command);
+	Pid pid = spawnProcess(command);
 	pid.wait;
 }
 

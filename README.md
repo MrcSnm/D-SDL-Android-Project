@@ -42,8 +42,12 @@ There are arrays definitions for each thing:
 - Arch Folders:
 Those are the output folders for each build, default is:
 ```
-
+	aarch64 --> arm64-v8a
+    armv7a  --> armeabi-v7a
+    x86_64  --> x86_64
+    i686    --> x86
 ```
+- Output path: `./SDL2/android-project/app/main/jniLibs/`
 
 - Dependencies, default is:
 ```

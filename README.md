@@ -13,12 +13,12 @@ As the purpose of this template is to be beginner friendly, I will try to mantai
 
 ## Important notes
 This project was made for working on Linux, so, it is untested on Windows, but it should not differ too much
-> ldc2 is a command on your console 
-> rdmd is a command on your console
+> ldc2 and rdmd is a command on your console
 >>Get those commands at [Dlang main compilers](https://dlang.org/download.html)
-> You should have modified (dlangPath)/(ldc)/etc/ldc2.conf to include your target architectures, check at my other repo [D-Lang On Android](https://github.com/MrcSnm/D-Lang-on-Android)
-> You should have defined on your environment the variable "ANDROID_NDK_HOME"
-> Execute on a terminal in the current path `rdmd setupsdl.d`
+
+>- You should have modified (dlangPath)/(ldc)/etc/ldc2.conf to include your target architectures, check at my other repo [D-Lang On Android](https://github.com/MrcSnm/D-Lang-on-Android)
+>- You should have defined on your environment the variable "ANDROID_NDK_HOME"
+>- Execute on a terminal in the current path `rdmd setupsdl.d` before building anything
 >>If you're on **Windows**, run this command with admin privilleges
 
 ## Building

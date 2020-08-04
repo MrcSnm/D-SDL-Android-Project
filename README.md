@@ -3,21 +3,31 @@ Provides a default/template project for programming with D and SDL on Android
 This template for my tutorial about how to get your D code working on Android + SDL on Android
 
 As the purpose of this template is to be beginner friendly, I will try to mantain updated:
-- SDL
-- SDL_Image
-- SDL_Mixer
-- SDL_TTF
-- SDL_Network
+- SDL         (2.0.12)
+> This is a slightly modified version from SDL source code, the only difference at the path `SDL2/android-project/app/jni`, the folder
+**src** was deleted, as there was no need to compile any C code
+- SDL_Image    (2.0.5)
+- SDL_Mixer    (2.0.4)
+- SDL_TTF     (2.0.15)
+- SDL_Network  (2.0.1)
 
 ## Important notes
 This project was made for working on Linux, so, it is untested on Windows, but it should not differ too much
-> ldc2 is a command on your console
-> You should have modified (dlangPath)/(ldc)/etc/ldc2.conf to include your target architectures
+> ldc2 is a command on your console 
+> rdmd is a command on your console
+>>Get those commands at [Dlang main compilers](https://dlang.org/download.html)
+> You should have modified (dlangPath)/(ldc)/etc/ldc2.conf to include your target architectures, check at my other repo [D-Lang On Android](https://github.com/MrcSnm/D-Lang-on-Android)
 > You should have defined on your environment the variable "ANDROID_NDK_HOME"
+> Execute on a terminal in the current path `rdmd setupsdl.d`
+>>If you're on **Windows**, run this command with admin privilleges
 
 ## Building
 The build system will be a bit different of the main build system for D, which is called `dub`. The reasoning is for simply
 keeping your build with some library filtering(for the target Android architectures)
+The buid command for this project is `rdmd build.d`
+Commands supported on build.d
+- --arch -> Receives the target architecture to compile, default is all.
+- --help -> Shows every supported architecture.
 
 ### Modifying build.d
 If you need to modify the main build system, it is quite simple to add your own things to it

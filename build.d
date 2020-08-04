@@ -9,7 +9,7 @@ string compiler = "ldc2";
 */
 string objectDir = "obj";
 
-string outputPath = "./SDL2/android-project/app/main/jniLibs/";
+string outputPath = "./SDL2/android-project/app/src/main/jniLibs/";
 /**
 *	If you need to add a new architecture to output
 **/
@@ -81,6 +81,27 @@ enum ndkApiLevel = 21;
 **/
 enum tripleSystem = "-linux-android";
 
+
+string checkArchitectureMatch(string[] a)
+{
+	bool hasPassed = false;
+	foreach(check; a)
+	{
+		hasPassed = false;
+		foreach(arch; archs)
+		{
+			if(check == arch)
+			{
+				hasPassed = true;
+				break;
+			}
+		}
+		if(!hasPassed)
+			return check;
+	}
+	return "";
+}
+
 string[] getSources(string path) 
 {
 	string[] files;
@@ -89,7 +110,8 @@ string[] getSources(string path)
 	return files;
 }
 
-void buildProgram(string arch, string[] sources) {
+void buildProgram(string arch, string[] sources) 
+{
 	string[] command = [compiler];
 
 	foreach (sourcePath; sourcePaths)
@@ -117,35 +139,54 @@ void buildProgram(string arch, string[] sources) {
 	command ~= format!"-L=-L%s"(androidLibs)~" ";
 
 	foreach(source; sources)
-	{
 		command~= source;
-	}
-
 	
 
 	// Pid pid = spawnProcess("/bin/echo" ~ command);
 	Pid pid = spawnProcess(command);
 	pid.wait;
+	writefln("Compiled %s, output at: %s", arch, outputPath~archFolders[arch]);
 }
 
-void main() 
+void main(string[] args) 
 {
 	// For debuging
 	
-	try
-	{
-		environment["ANDROID_NDK_HOME"];
-	}
-	catch(Exception e)
-	{
-		throw new Error("You must define on your environment the variable ANDROID_NDK_HOME");
-	}
+	//Check for NDK
+	try{environment["ANDROID_NDK_HOME"];}
+	catch(Exception e){throw new Error("You must define on your environment the variable ANDROID_NDK_HOME");}
 	writeln("Getting NDK from: " ~ environment["ANDROID_NDK_HOME"]~"/");
 
-	string[] sources;
-	foreach (sourcePath; sourcePaths)
-		sources ~= sourcePath.getSources;
+	//Check for setup
+	if(!exists("./SDL2/"))
+	{
+		writeln("Please, run setupsdl.d first by calling 'rdmd setupsdl.d'\nIf you're running on Windows, run it as admin.");
+		return;
+	}
 
-	foreach (arch; archs)
-		buildProgram(arch, sources);
+	string[] architectures;
+	if(args.length == 1) //Default is 1
+		architectures = archs;
+	//Get cli options
+	auto helpInfo = getopt(args, 
+	"aarch", &architectures);
+
+	//Check if no architecture provided or help wanted
+	if(helpInfo.helpWanted || architectures.length == 0)
+		writefln("%s: Adds an architercutre to compile. Supported values are:\naarch64, armv7a, x86_64, i686 ", "--aarch");
+	else
+	{
+		//Check for architecture validity
+		string error = checkArchitectureMatch(architectures);
+		if(error != "")
+		{
+			writeln(error~" is not a supported option for --aarch");
+			return;
+		}
+		string[] sources;
+		foreach (sourcePath; sourcePaths)
+			sources ~= sourcePath.getSources;
+		foreach (arch; architectures)
+			buildProgram(arch, sources);
+	}
 }

@@ -13,15 +13,10 @@ static enum string[string] targetLinks =
     _["SDL2_ttf"] = "SDL2_ttf-2.0.15";
     return _;
 }();
-// char[] stringz(string str)
-// {
-//     char[] ret = new char[str.length+1];
-//     for(ulong i = 0, len = str.length; i < len;i++)
-//         ret[i]=str[i];
-//     ret[str.length] = 0;
-//     return ret;
-// }
 
+/**
+*   Windows requires admin privilleges
+*/
 void portablesymlink(string original, string target)
 {
     const(char[])[] cmd;
@@ -49,13 +44,16 @@ void main()
     foreach(name, am; zip.directory)
     {
         string mdir = name[0..lastIndexOf(name, "/")+1];
-        if(exists(name))
-            count++;
-        else if(mdir!=name)
+        if(mdir!=name)
         {
-            mkdirRecurse(mdir);
-            writeln("Extracting "~name);
-            std.file.write(name, zip.expand(am));
+            if(exists(name))
+                count++;
+            else
+            {
+                mkdirRecurse(mdir);
+                writeln("Extracting "~name);
+                std.file.write(name, zip.expand(am));
+            }
         }
     }
     if(count != 0)
